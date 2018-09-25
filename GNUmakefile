@@ -14,8 +14,8 @@ libdecnumber.a: decNumber.o decContext.o decimal32.o decimal64.o decimal128.o \
 	$(AR) rc $@ $^
 
 %.o: %.c
-	$(CC) -c $(CFLAGS) $(DEFINES) $(INCLUDES) -c $< -o $@
+	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) -c $< -o $@
 
 %.o: bid/%.c
-	$(CC) -c $(CFLAGS) $(DEFINES) $(INCLUDES) -c $< -o $@
+	$(CC) $(CFLAGS) $(DEFINES) $(INCLUDES) -c $< -o $@
 
