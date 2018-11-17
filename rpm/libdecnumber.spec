@@ -39,7 +39,6 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-/usr/bin/*
 /usr/lib64/*
 /usr/include/*
 
@@ -52,5 +51,5 @@ rm -f /etc/ld.so.conf.d/libdecnumber.conf
 ldconfig
 
 %changelog
-* Tue Nov 09 2018 <gchrisanderson@gmail.com>
+* Tue Nov 17 2018 <gchrisanderson@gmail.com>
 - Test RPM build

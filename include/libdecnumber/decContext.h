@@ -51,7 +51,8 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
   #define DECCFULLNAME "Decimal Context Descriptor"   /* Verbose name */
   #define DECCAUTHOR   "Mike Cowlishaw" 	      /* Who to blame */
 
-  #include "gstdint.h"		   /* C99 standard integers	      */
+  #include <sys/types.h>
+  #include <stdint.h>
   #include <stdio.h>		   /* for printf, etc.		      */
   #include <signal.h>		   /* for traps 		      */
 
