@@ -34,6 +34,8 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 
 #else
 
+#if 0
 #include "config.h"
+#endif
 
 #endif
