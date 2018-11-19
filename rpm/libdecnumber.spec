@@ -1,9 +1,9 @@
 Name:		libdecnumber
 Version:	999.999
 Release:	99999%{?dist}
-Summary:	Command line editor
+Summary:	IEEE 754-2008 decimal library
 
-Group:		Rai
+Group:		Development/Libraries
 License:	GPL3
 URL:		https://github.com/raitechnology/%{name}
 Source0:	%{name}-%{version}-99999.tar.gz
@@ -12,7 +12,7 @@ BuildArch:      x86_64
 Prefix:	        /usr
 
 %description
-A IEEE 754-2008 decimal library
+A IEEE 754-2008 decimal library pulled from gcc
 
 %prep
 %setup -q
