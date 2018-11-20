@@ -6,7 +6,8 @@ date   := $(shell date +"%a %b %d %Y")
 major_num   := 3
 minor_num   := 61
 patch_num   := 0
-build_num   := $(shell git log --no-decorate -n 1 --oneline | sed 's/ .*//')
+build_num   := 2
+#build_num   := $(shell git log --no-decorate -n 1 --oneline | sed 's/ .*//')
 version     := $(major_num).$(minor_num).$(patch_num)
 ver_build   := $(version)-$(build_num)
 
