@@ -37,11 +37,11 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #include <string.h>	      /* [for memset/memcpy] */
 #include <stdio.h>	      /* [for printf] */
 
-#include "dconfig.h"          /* GCC definitions */
+#include <libdecnumber/dconfig.h> /* GCC definitions */
 #define  DECNUMDIGITS 16      /* make decNumbers with space for 16 */
-#include "decNumber.h"	      /* base number library */
-#include "decNumberLocal.h"   /* decNumber local types, etc. */
-#include "decimal64.h"	      /* our primary include */
+#include <libdecnumber/decNumber.h> /* base number library */
+#include <libdecnumber/decNumberLocal.h> /* decNumber local types, etc.*/
+#include <libdecnumber/dpd/decimal64.h> /* our primary include */
 
 /* Utility routines and tables [in decimal64.c]; externs for C++ */
 extern const uInt COMBEXP[32], COMBMSD[32];
@@ -65,7 +65,7 @@ extern void decNumberShow(const decNumber *);	  /* .. */
 #define DEC_BIN2CHAR 1
 #define DEC_DPD2BIN  1
 #define DEC_BIN2DPD  1		   /* used for all sizes */
-#include "decDPD.h"		   /* lookup tables */
+#include <libdecnumber/decDPD.h> /* lookup tables */
 
 /* ------------------------------------------------------------------ */
 /* decimal64FromNumber -- convert decNumber to decimal64	      */
@@ -553,7 +553,7 @@ void decimal64Show(const decimal64 *d64) {
 #else
   #define DEC_DPD2BCD 1
 #endif
-#include "decDPD.h"	      /* lookup tables */
+#include <libdecnumber/decDPD.h> /* lookup tables */
 
 /* The maximum number of decNumberUnits needed for a working copy of */
 /* the units array is the ceiling of digits/DECDPUN, where digits is */

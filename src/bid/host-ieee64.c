@@ -33,8 +33,8 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
    to one copy, then compile both copies and add them to libgcc.a.  */
 
 #include <string.h>
-#include "bid-dpd.h"
-#include "decimal64.h"
+#include <libdecnumber/bid/bid-dpd.h>
+#include <libdecnumber/bid/decimal64.h>
 
 void __host_to_ieee_64 (_Decimal64 in, decimal64 *out);
 void __ieee_to_host_64 (decimal64 in, _Decimal64 *out);

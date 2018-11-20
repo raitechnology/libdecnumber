@@ -23,7 +23,7 @@ a copy of the GCC Runtime Library Exception along with this program;
 see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 <http://www.gnu.org/licenses/>.  */
 
-#include "decContext.h"
+#include <libdecnumber/decContext.h>
 
 #define DFP_INIT_ROUNDMODE(A)  A = __decGetRound()
 

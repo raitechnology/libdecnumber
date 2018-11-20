@@ -33,8 +33,8 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
    to one copy, then compile both copies and add them to libgcc.a.  */
 
 #include <string.h>
-#include "bid-dpd.h"
-#include "decimal32.h"
+#include <libdecnumber/bid/bid-dpd.h>
+#include <libdecnumber/bid/decimal32.h>
 
 void __host_to_ieee_32 (_Decimal32 in, decimal32 *out);
 void __ieee_to_host_32 (decimal32 in, _Decimal32 *out);

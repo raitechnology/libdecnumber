@@ -48,9 +48,9 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
   #define DECSINGLE_Ehigh (DECSINGLE_Emax + DECSINGLE_Bias - (DECSINGLE_Pmax-1))
 
   /* Required includes						      */
-  #include "decContext.h"
-  #include "decQuad.h"
-  #include "decDouble.h"
+  #include <libdecnumber/decContext.h>
+  #include <libdecnumber/decQuad.h>
+  #include <libdecnumber/decDouble.h>
 
   /* The decSingle decimal 32-bit type, accessible by all sizes */
   typedef union {
@@ -63,7 +63,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
   /* Routines -- implemented as decFloat routines in common files     */
   /* ---------------------------------------------------------------- */
 
-  #include "decSingleSymbols.h"
+  #include <libdecnumber/decSingleSymbols.h>
 
   /* Utilities (binary argument(s) or result, extractors, etc.) */
   extern decSingle * decSingleFromBCD(decSingle *, int32_t, const uint8_t *, int32_t);

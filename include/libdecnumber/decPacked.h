@@ -38,7 +38,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
   #ifndef  DECNUMDIGITS
     #define DECNUMDIGITS DECPACKED_DefP /* size if not already defined*/
   #endif
-  #include "decNumber.h"		/* context and number library */
+  #include <libdecnumber/decNumber.h>	/* context and number library */
 
   /* Sign nibble constants					      */
   #if !defined(DECPPLUSALT)
@@ -54,7 +54,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
   /* decPacked public routines					      */
   /* ---------------------------------------------------------------- */
 
-  #include "decPackedSymbols.h"
+  #include <libdecnumber/decPackedSymbols.h>
 
   /* Conversions						      */
   uint8_t * decPackedFromNumber(uint8_t *, int32_t, int32_t *,

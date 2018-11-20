@@ -244,7 +244,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 
   /* decContext routines					      */
 
-  #include "decContextSymbols.h"
+  #include <libdecnumber/decContextSymbols.h>
 
   #ifdef __cplusplus
   extern "C" {

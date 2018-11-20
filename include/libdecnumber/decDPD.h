@@ -29,7 +29,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 /* ------------------------------------------------------------------------ */
 /* For details, see DPDecimal.html on the General Decimal Arithmetic page.  */
 
-#include "decDPDSymbols.h"
+#include <libdecnumber/decDPDSymbols.h>
 
 /* This include file defines several DPD and BCD conversion tables:	    */
 /*									    */

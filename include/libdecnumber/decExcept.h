@@ -23,8 +23,8 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 <http://www.gnu.org/licenses/>.  */
 
 #include <fenv.h>
-#include "dconfig.h"
-#include "decContext.h"
+#include <libdecnumber/dconfig.h>
+#include <libdecnumber/decContext.h>
 
 #define DFP_EXCEPTIONS_ENABLED 1
 #define DFP_HANDLE_EXCEPTIONS(A) __dfp_raise_except(A)

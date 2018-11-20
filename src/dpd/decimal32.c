@@ -37,11 +37,11 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #include <string.h>	      /* [for memset/memcpy] */
 #include <stdio.h>	      /* [for printf] */
 
-#include "dconfig.h"          /* GCC definitions */
+#include <libdecnumber/dconfig.h> /* GCC definitions */
 #define  DECNUMDIGITS  7      /* make decNumbers with space for 7 */
-#include "decNumber.h"	      /* base number library */
-#include "decNumberLocal.h"   /* decNumber local types, etc. */
-#include "decimal32.h"	      /* our primary include */
+#include <libdecnumber/decNumber.h> /* base number library */
+#include <libdecnumber/decNumberLocal.h> /* decNumber local types, etc.*/
+#include <libdecnumber/dpd/decimal32.h> /* our primary include */
 
 /* Utility tables and routines [in decimal64.c] */
 extern const uInt   COMBEXP[32], COMBMSD[32];

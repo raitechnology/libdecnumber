@@ -57,7 +57,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
     #define DECNUMDIGITS DECIMAL64_Pmax /* size if not already defined*/
   #endif
   #ifndef DECNUMBER
-    #include "decNumber.h"		/* context and number library */
+    #include <libdecnumber/decNumber.h> /* context and number lib */
   #endif
 
   /* Decimal 64-bit type, accessible by bytes			      */
@@ -77,7 +77,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
   /* Routines							      */
   /* ---------------------------------------------------------------- */
 
-#include "decimal64Symbols.h"
+#include <libdecnumber/dpd/decimal64Symbols.h>
 
   #ifdef __cplusplus
   extern "C" {

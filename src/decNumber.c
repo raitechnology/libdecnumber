@@ -176,9 +176,9 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #include <stdio.h>		   /* for printf [if needed] */
 #include <string.h>		   /* for strcpy */
 #include <ctype.h>		   /* for lower */
-#include "dconfig.h"		   /* for GCC definitions */
-#include "decNumber.h"		   /* base number library */
-#include "decNumberLocal.h"	   /* decNumber local types, etc. */
+#include <libdecnumber/dconfig.h>  /* for GCC definitions */
+#include <libdecnumber/decNumber.h> /* base number library */
+#include <libdecnumber/decNumberLocal.h> /* decNumber local types, etc. */
 
 /* Constants */
 /* Public lookup table used by the D2U macro */

@@ -50,7 +50,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
   #define DECQUAD_Ehigh (DECQUAD_Emax + DECQUAD_Bias - (DECQUAD_Pmax-1))
 
   /* Required include						      */
-  #include "decContext.h"
+  #include <libdecnumber/decContext.h>
 
   /* The decQuad decimal 128-bit type, accessible by all sizes */
   typedef union {
@@ -89,7 +89,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
   /* Routines -- implemented as decFloat routines in common files     */
   /* ---------------------------------------------------------------- */
 
-  #include "decQuadSymbols.h"
+  #include <libdecnumber/decQuadSymbols.h>
 
   /* Utilities and conversions, extractors, etc.) */
   extern decQuad * decQuadFromBCD(decQuad *, int32_t, const uint8_t *, int32_t);

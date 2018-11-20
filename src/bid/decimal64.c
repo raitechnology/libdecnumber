@@ -35,7 +35,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #undef decimal64FromNumber
 #undef decimal64ToNumber
 
-#include "bid-dpd.h"
+#include <libdecnumber/bid/bid-dpd.h>
 
 #ifdef IN_LIBGCC2
 #define decimal64FromString __decimal64FromString

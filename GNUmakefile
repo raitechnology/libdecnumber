@@ -15,25 +15,21 @@ libd      := $(build_dir)/lib64
 objd      := $(build_dir)/obj
 dependd   := $(build_dir)/dep
 
-major_num   := 3
-minor_num   := 61
-patch_num   := 0
-build_num   := 1
-version     := $(major_num).$(minor_num).$(patch_num)
-ver_build   := $(version)-$(build_num)
-
 CC       ?= gcc
 AR       ?= ar
 CFLAGS   ?= -ggdb -O2 -Wall -fPIC
-INCLUDES ?= -Isrc -Iinclude/libdecnumber -Iinclude/libdecnumber/bid \
-            -Iinclude/libdecnumber/dpd
+INCLUDES ?= -Isrc -Iinclude
 cc       := $(CC)
 cflags   := $(CFLAGS)
 includes := $(INCLUDES)
 defines  :=
 soflag   := -shared
 
+.PHONY: everything
 everything: all
+
+# version vars
+-include .copr/Makefile
 
 libdecnumber_files := decNumber decContext decimal32 decimal64 decimal128 \
                       bid2dpd_dpd2bid host-ieee32 host-ieee64 host-ieee128
@@ -72,13 +68,7 @@ $(dependd)/depend.make: $(dependd) $(all_depends)
 dist_bins: $(all_libs)
 
 .PHONY: dist_rpm
-dist_rpm:
-	mkdir -p rpmbuild/{RPMS,SRPMS,BUILD,SOURCES,SPECS}
-	sed -e "s/99999/${build_num}/" \
-	    -e "s/999.999/${version}/" < rpm/libdecnumber.spec > rpmbuild/SPECS/libdecnumber.spec
-	mkdir -p rpmbuild/SOURCES/libdecnumber-${version}
-	ln -sf ../../../src ../../../include ../../../GNUmakefile rpmbuild/SOURCES/libdecnumber-${version}/
-	( cd rpmbuild/SOURCES && tar chzf libdecnumber-${ver_build}.tar.gz --exclude=".*.sw*" libdecnumber-${version} && rm -r -f libdecnumber-${version} )
+dist_rpm: srpm
 	( cd rpmbuild && rpmbuild --define "-topdir `pwd`" -ba SPECS/libdecnumber.spec )
 
 # force a remake of depend using 'make -B depend'

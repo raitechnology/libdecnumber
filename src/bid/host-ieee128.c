@@ -24,9 +24,9 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 
 #include <string.h>
 
-#include "dconfig.h"
-#include "bid-dpd.h"
-#include "decimal128.h"
+#include <libdecnumber/dconfig.h>
+#include <libdecnumber/bid/bid-dpd.h>
+#include <libdecnumber/bid/decimal128.h>
 
 void __host_to_ieee_128 (_Decimal128 in, decimal128 *out);
 void __ieee_to_host_128 (decimal128 in, _Decimal128 *out);

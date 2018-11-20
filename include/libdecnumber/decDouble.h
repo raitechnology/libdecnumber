@@ -48,8 +48,8 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
   #define DECDOUBLE_Ehigh (DECDOUBLE_Emax + DECDOUBLE_Bias - (DECDOUBLE_Pmax-1))
 
   /* Required includes						      */
-  #include "decContext.h"
-  #include "decQuad.h"
+  #include <libdecnumber/decContext.h>
+  #include <libdecnumber/decQuad.h>
 
   /* The decDouble decimal 64-bit type, accessible by all sizes */
   typedef union {
@@ -65,7 +65,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
   /* Routines -- implemented as decFloat routines in common files     */
   /* ---------------------------------------------------------------- */
 
-  #include "decDoubleSymbols.h"
+  #include <libdecnumber/decDoubleSymbols.h>
 
   /* Utilities and conversions, extractors, etc.) */
   extern decDouble * decDoubleFromBCD(decDouble *, int32_t, const uint8_t *, int32_t);

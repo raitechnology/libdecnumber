@@ -35,7 +35,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #undef decimal32FromNumber
 #undef decimal32ToNumber
 
-#include "bid-dpd.h"
+#include <libdecnumber/bid/bid-dpd.h>
 
 #ifdef IN_LIBGCC2
 #define decimal32FromString __decimal32FromString

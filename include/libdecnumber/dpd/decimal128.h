@@ -55,7 +55,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
     #define DECNUMDIGITS DECIMAL128_Pmax /* size if not already defined*/
   #endif
   #ifndef DECNUMBER
-    #include "decNumber.h"		/* context and number library */
+    #include <libdecnumber/decNumber.h> /* context and number lib */
   #endif
 
   /* Decimal 128-bit type, accessible by bytes			      */
@@ -71,13 +71,13 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
     #define DECIMAL_Inf     0x78	/* 0 11110 00 Infinity	      */
   #endif
 
-#include "decimal128Local.h"
+#include <libdecnumber/dpd/decimal128Local.h>
 
   /* ---------------------------------------------------------------- */
   /* Routines							      */
   /* ---------------------------------------------------------------- */
 
-#include "decimal128Symbols.h"
+#include <libdecnumber/dpd/decimal128Symbols.h>
 
   #ifdef __cplusplus
   extern "C" {

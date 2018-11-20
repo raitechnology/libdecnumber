@@ -34,9 +34,9 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 #ifdef DECCHECK
 #include <stdio.h>	      /* for printf if DECCHECK */
 #endif
-#include "dconfig.h"	      /* for GCC definitions */
-#include "decContext.h"       /* context and base types */
-#include "decNumberLocal.h"   /* decNumber local types, etc. */
+#include <libdecnumber/dconfig.h>	 /* for GCC definitions */
+#include <libdecnumber/decContext.h>     /* context and base types */
+#include <libdecnumber/decNumberLocal.h> /* decNumber local types, etc.*/
 
 /* compile-time endian tester [assumes sizeof(Int)>1] */
 static	const  Int mfcone=1;		     /* constant 1 */

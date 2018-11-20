@@ -51,5 +51,5 @@ rm -f /etc/ld.so.conf.d/libdecnumber.conf
 ldconfig
 
 %changelog
-* Tue Nov 17 2018 <gchrisanderson@gmail.com>
-- Test RPM build
+* __DATE__ <gchrisanderson@gmail.com>
+- Hello world

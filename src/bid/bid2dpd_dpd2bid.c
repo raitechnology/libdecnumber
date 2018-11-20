@@ -22,7 +22,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
 <http://www.gnu.org/licenses/>.  */
 
 #undef IN_LIBGCC2
-#include "bid-dpd.h"
+#include <libdecnumber/bid/bid-dpd.h>
 
 /* get full 64x64bit product */
 #define __mul_64x64_to_128(P, CX, CY)             \
@@ -79,7 +79,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
   __add_128_64((Q), AHBH, QM2.w[1]);              \
 }
 
-#include "bid2dpd_dpd2bid.h"
+#include <libdecnumber/bid/bid2dpd_dpd2bid.h>
 
 static const unsigned int dm103[] =
   { 0, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000, 11000 };

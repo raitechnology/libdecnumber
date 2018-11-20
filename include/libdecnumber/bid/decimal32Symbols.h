@@ -1,1 +1,1 @@
-#include "dpd/decimal32Symbols.h"
+#include <libdecnumber/dpd/decimal32Symbols.h>
