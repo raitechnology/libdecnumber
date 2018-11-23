@@ -11,6 +11,8 @@ BuildRoot:	${_tmppath}
 BuildArch:      x86_64
 BuildRequires:  gcc-c++
 Prefix:	        /usr
+Requires(post): /sbin/ldconfig
+Requires(postun): /sbin/ldconfig
 
 %description
 A IEEE 754-2008 decimal library pulled from gcc
@@ -45,11 +47,13 @@ rm -rf %{buildroot}
 
 %post
 echo "${RPM_INSTALL_PREFIX}/lib64" > /etc/ld.so.conf.d/libdecnumber.conf
-ldconfig
+/sbin/ldconfig
 
 %postun
+if [ $1 -eq 0 ] ; then
 rm -f /etc/ld.so.conf.d/libdecnumber.conf
-ldconfig
+fi
+/sbin/ldconfig
 
 %changelog
 * __DATE__ <gchrisanderson@gmail.com>
