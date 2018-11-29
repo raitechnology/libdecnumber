@@ -8,7 +8,6 @@ License:	GPL3
 URL:		https://github.com/raitechnology/%{name}
 Source0:	%{name}-%{version}-99999.tar.gz
 BuildRoot:	${_tmppath}
-BuildArch:      x86_64
 BuildRequires:  gcc-c++
 Prefix:	        /usr
 Requires(post): /sbin/ldconfig
