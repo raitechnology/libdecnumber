@@ -4,13 +4,12 @@ debbuild := dpkgbuild/$(name_ver)
 debian   := dpkgbuild/$(name_ver)/debian
 origtgz  := $(name)_$(version).orig.tar.gz
 debtgz   := $(name)_$(ver_build).debian.tar.gz
-srccpy   := src include GNUmakefile .copr deb rpm
 
 .PHONY: debian
 debian:
-	rm -r -f $(debbuild)
+	rm -rf $(debbuild)
 	mkdir -p $(debbuild)
-	for i in $(srccpy) ; do ln -sf ../../$$i $(debbuild) ; done
+	for i in $(srctree) ; do ln -sf ../../$$i $(debbuild) ; done
 	( cd dpkgbuild && tar chzf $(origtgz) --exclude=".*.sw*" $(name_ver) && rm -rf $(name_ver) )
 	mkdir -p $(debian)
 	cp -a deb/copyright deb/rules deb/compat $(debian)

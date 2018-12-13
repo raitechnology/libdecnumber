@@ -15,6 +15,11 @@ libd      := $(build_dir)/lib64
 objd      := $(build_dir)/obj
 dependd   := $(build_dir)/dep
 
+# use 'make port_extra=-g' for debug build
+ifeq (-g,$(findstring -g,$(port_extra)))
+  DEBUG = true
+endif
+
 CC          ?= gcc
 cc          := $(CC)
 arch_cflags := -fno-omit-frame-pointer
