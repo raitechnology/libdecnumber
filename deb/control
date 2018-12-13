@@ -1,0 +1,15 @@
+Source: libdecnumber
+Section: devel
+Priority: optional
+Maintainer: Chris Anderson <chris@raitechnology.com>
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.5
+Homepage: https://www.github.com/raitechnology/libdecnumber
+
+Package: libdecnumber
+Architecture: amd64
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: Library for decimal number math
+ Library for IEEE 754-2008 decimal math.  Authored by IBM and Intel, pulled
+ from the gcc runtime.
+

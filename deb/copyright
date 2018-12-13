@@ -1,0 +1,11 @@
+Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Source: http://ftp.gnu.org/pub/gnu/gcc/
+Comment:
+ This library was extracted from the gcc runtime.
+
+Files: *
+Copyright: 1984, 1986, 1987-2015 Free Software Foundation, Inc.
+License: GPL-3+
+ On Debian systems, the full text of the GNU General Public License
+ Version 3 can be found in the file
+ '/usr/share/common-licenses/GPL-3'.

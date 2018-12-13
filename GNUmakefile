@@ -15,21 +15,38 @@ libd      := $(build_dir)/lib64
 objd      := $(build_dir)/obj
 dependd   := $(build_dir)/dep
 
-CC       ?= gcc
-AR       ?= ar
-CFLAGS   ?= -ggdb -O2 -Wall -fPIC
-INCLUDES ?= -Isrc -Iinclude
-cc       := $(CC)
-cflags   := $(CFLAGS)
-includes := $(INCLUDES)
+CC          ?= gcc
+cc          := $(CC)
+arch_cflags := -fno-omit-frame-pointer
+gcc_wflags  := -Wall -Werror
+fpicflags   := -fPIC
+soflag      := -shared
+
+ifdef DEBUG
+default_cflags := -ggdb
+else
+default_cflags := -O3 -ggdb
+endif
+# rpmbuild uses RPM_OPT_FLAGS
+#CFLAGS ?= $(default_cflags)
+#RPM_OPT_FLAGS ?= $(default_cflags)
+#CFLAGS ?= $(RPM_OPT_FLAGS)
+cflags   := $(gcc_wflags) $(default_cflags) $(arch_cflags)
+INCLUDES ?=
+DEFINES  ?=
+includes := -Isrc -Iinclude $(INCLUDES)
 defines  :=
-soflag   := -shared
 
 .PHONY: everything
 everything: all
 
-# version vars
+# copr/fedora build (with version env vars)
+# copr uses this to generate a source rpm with the srpm target
 -include .copr/Makefile
+
+# debian build (debuild)
+# target for building installable deb: dist_dpkg
+-include deb/Makefile
 
 libdecnumber_files := decNumber decContext decimal32 decimal64 decimal128 \
                       bid2dpd_dpd2bid host-ieee32 host-ieee64 host-ieee128
@@ -64,12 +81,35 @@ $(dependd)/depend.make: $(dependd) $(all_depends)
 	@echo "# depend file" > $(dependd)/depend.make
 	@cat $(all_depends) >> $(dependd)/depend.make
 
+# target used by rpmbuild
 .PHONY: dist_bins
 dist_bins: $(all_libs)
 
+# target for building installable rpm
 .PHONY: dist_rpm
 dist_rpm: srpm
 	( cd rpmbuild && rpmbuild --define "-topdir `pwd`" -ba SPECS/libdecnumber.spec )
+
+ifeq ($(DESTDIR),)
+# 'sudo make install' puts things in /usr/local/lib, /usr/local/include
+install_prefix = /usr/local
+else
+# debuild uses DESTDIR to put things into debian/libdecnumber/usr
+install_prefix = $(DESTDIR)/usr
+endif
+
+install: everything
+	install -d $(install_prefix)/lib $(install_prefix)/include/libdecnumber/bid $(install_prefix)/include/libdecnumber/dpd
+	for f in $(libd)/libdecnumber.* ; do \
+	if [ -h $$f ] ; then \
+	cp -a $$f $(install_prefix)/lib ; \
+	else \
+	install $$f $(install_prefix)/lib ; \
+	fi ; \
+	done
+	install -m 644 include/libdecnumber/*.h $(install_prefix)/include/libdecnumber
+	install -m 644 include/libdecnumber/bid/*.h $(install_prefix)/include/libdecnumber/bid
+	install -m 644 include/libdecnumber/dpd/*.h $(install_prefix)/include/libdecnumber/dpd
 
 # force a remake of depend using 'make -B depend'
 .PHONY: depend
