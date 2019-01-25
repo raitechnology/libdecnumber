@@ -1,5 +1,5 @@
-lsb_dist     := $(shell if [ -x /usr/bin/lsb_release ] ; then lsb_release -is ; else echo Linux ; fi)
-lsb_dist_ver := $(shell if [ -x /usr/bin/lsb_release ] ; then lsb_release -rs | sed 's/[.].*//' ; fi)
+lsb_dist     := $(shell if [ -x /usr/bin/lsb_release ] ; then lsb_release -is ; else uname -s ; fi)
+lsb_dist_ver := $(shell if [ -x /usr/bin/lsb_release ] ; then lsb_release -rs | sed 's/[.].*//' ; else uname -r | sed 's/[-].*//' ; fi)
 uname_m      := $(shell uname -m)
 
 short_dist_lc := $(patsubst CentOS,rh,$(patsubst RedHatEnterprise,rh,\
@@ -108,19 +108,21 @@ dist_rpm: srpm
 
 ifeq ($(DESTDIR),)
 # 'sudo make install' puts things in /usr/local/lib, /usr/local/include
-install_prefix = /usr/local
+install_prefix ?= /usr/local
 else
 # debuild uses DESTDIR to put things into debian/libdecnumber/usr
 install_prefix = $(DESTDIR)/usr
 endif
+install_lib_suffix ?=
 
 install: everything
-	install -d $(install_prefix)/lib $(install_prefix)/include/libdecnumber/bid $(install_prefix)/include/libdecnumber/dpd
+	install -d $(install_prefix)/lib$(install_lib_suffix)
+	install -d $(install_prefix)/include/libdecnumber/bid $(install_prefix)/include/libdecnumber/dpd
 	for f in $(libd)/libdecnumber.* ; do \
 	if [ -h $$f ] ; then \
-	cp -a $$f $(install_prefix)/lib ; \
+	cp -a $$f $(install_prefix)/lib$(install_lib_suffix) ; \
 	else \
-	install $$f $(install_prefix)/lib ; \
+	install $$f $(install_prefix)/lib$(install_lib_suffix) ; \
 	fi ; \
 	done
 	install -m 644 include/libdecnumber/*.h $(install_prefix)/include/libdecnumber
