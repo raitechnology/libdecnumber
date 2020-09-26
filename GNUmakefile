@@ -28,6 +28,12 @@ gcc_wflags  := -Wall -Werror
 fpicflags   := -fPIC
 soflag      := -shared
 
+ifeq (Darwin,$(lsb_dist))
+dll         := dylib
+else
+dll         := so
+endif
+
 ifdef DEBUG
 default_cflags := -ggdb
 else
@@ -64,15 +70,16 @@ libdecnumber_dbjs  := $(addprefix $(objd)/, $(addsuffix .fpic.o, $(libdecnumber_
 libdecnumber_deps  := $(addprefix $(dependd)/, $(addsuffix .d, $(libdecnumber_files))) \
                      $(addprefix $(dependd)/, $(addsuffix .fpic.d, $(libdecnumber_files)))
 libdecnumber_spec  := $(version)-$(build_num)
+libdecnumber_dylib := $(version).$(build_num)
 libdecnumber_ver   := $(major_num).$(minor_num)
 
 $(libd)/libdecnumber.a: $(libdecnumber_objs)
 
-$(libd)/libdecnumber.so: $(libdecnumber_dbjs)
+$(libd)/libdecnumber.$(dll): $(libdecnumber_dbjs)
 
 all_depends += $(libdecnumber_deps)
 all_dirs    += $(bind) $(libd) $(objd) $(dependd)
-all_libs    += $(libd)/libdecnumber.a $(libd)/libdecnumber.so
+all_libs    += $(libd)/libdecnumber.a $(libd)/libdecnumber.$(dll)
 
 all: $(all_libs)
 
@@ -154,6 +161,10 @@ $(libd)/%.a:
 $(libd)/%.so:
 	$(cc) $(soflag) $(cflags) -o $@.$($(*)_spec) -Wl,-soname=$(@F).$($(*)_ver) $($(*)_dbjs) $($(*)_dlnk) $(cpp_dll_lnk) $(sock_lib) $(math_lib) $(thread_lib) $(malloc_lib) $(dynlink_lib) && \
 	cd $(libd) && ln -f -s $(@F).$($(*)_spec) $(@F).$($(*)_ver) && ln -f -s $(@F).$($(*)_ver) $(@F)
+
+$(libd)/%.dylib:
+	$(cc) -dynamiclib $(cflags) -o $@.$($(*)_dylib).dylib -current_version $($(*)_dylib) -compatibility_version $($(*)_ver) $($(*)_dbjs) $($(*)_dlnk) $(cpp_dll_lnk) $(sock_lib) $(math_lib) $(thread_lib) $(malloc_lib) $(dynlink_lib) && \
+	cd $(libd) && ln -f -s $(@F).$($(*)_dylib).dylib $(@F).$($(*)_ver).dylib && ln -f -s $(@F).$($(*)_ver).dylib $(@F)
 
 $(dependd)/%.d: src/%.c
 	$(cc) $(arch_cflags) $(defines) $(includes) $($(notdir $*)_includes) $($(notdir $*)_defines) -MM $< -MT $(objd)/$(*).o -MF $@
