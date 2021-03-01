@@ -69,7 +69,7 @@ libdecnumber_objs  := $(addprefix $(objd)/, $(addsuffix .o, $(libdecnumber_files
 libdecnumber_dbjs  := $(addprefix $(objd)/, $(addsuffix .fpic.o, $(libdecnumber_files)))
 libdecnumber_deps  := $(addprefix $(dependd)/, $(addsuffix .d, $(libdecnumber_files))) \
                      $(addprefix $(dependd)/, $(addsuffix .fpic.d, $(libdecnumber_files)))
-libdecnumber_spec  := $(version)-$(build_num)
+libdecnumber_spec  := $(version)-$(build_num)_$(git_hash)
 libdecnumber_dylib := $(version).$(build_num)
 libdecnumber_ver   := $(major_num).$(minor_num)
 
