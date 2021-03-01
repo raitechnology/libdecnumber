@@ -9,6 +9,7 @@ URL:		https://github.com/raitechnology/%{name}
 Source0:	%{name}-%{version}-99999.tar.gz
 BuildRoot:	${_tmppath}
 BuildRequires:  gcc-c++
+BuildRequires:  git-core
 Prefix:	        /usr
 Requires(post): /sbin/ldconfig
 Requires(postun): /sbin/ldconfig
