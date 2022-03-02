@@ -65,6 +65,9 @@ everything: all
 
 libdecnumber_files := decNumber decContext decimal32 decimal64 decimal128 \
                       bid2dpd_dpd2bid host-ieee32 host-ieee64 host-ieee128
+libdecnumber_cfile := \
+	  $(foreach file, $(libdecnumber_files), $(wildcard src/$(file).c)) \
+	  $(foreach file, $(libdecnumber_files), $(wildcard src/bid/$(file).c))
 libdecnumber_objs  := $(addprefix $(objd)/, $(addsuffix .o, $(libdecnumber_files)))
 libdecnumber_dbjs  := $(addprefix $(objd)/, $(addsuffix .fpic.o, $(libdecnumber_files)))
 libdecnumber_deps  := $(addprefix $(dependd)/, $(addsuffix .d, $(libdecnumber_files))) \
@@ -82,6 +85,28 @@ all_dirs    += $(bind) $(libd) $(objd) $(dependd)
 all_libs    += $(libd)/libdecnumber.a $(libd)/libdecnumber.$(dll)
 
 all: $(all_libs)
+
+.PHONY: cmake
+cmake: CMakeLists.txt
+
+.ONESHELL: CMakeLists.txt
+CMakeLists.txt:
+	@cat <<'EOF' > $@
+	cmake_minimum_required (VERSION 3.9.0)
+	project (libdecnumber)
+	include_directories (src include)
+	set (CMAKE_VERBOSE_MAKEFILE ON)
+	if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
+	  if ($$<CONFIG:Release>)
+	    add_compile_options (/arch:AVX2 /GL)
+	  else ()
+	    add_compile_options (/arch:AVX2)
+	  endif ()
+	else ()
+	  add_compile_options ($(cflags))
+	endif ()
+	add_library (decnumber STATIC $(libdecnumber_cfile))
+	EOF
 
 # create directories
 $(dependd):

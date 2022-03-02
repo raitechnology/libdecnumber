@@ -321,12 +321,12 @@ char * decimal128ToString(const decimal128 *d128, char *string){
 
   if (exp==3) {
     if (msd==0) {		   /* infinity */
-      strcpy(c,   "Inf");
-      strcpy(c+3, "inity");
+      memcpy(c,   "Inf", 3);
+      memcpy(c+3, "inity", 6);
       return string;		   /* easy */
       }
     if (sourhi&0x02000000) *c++='s'; /* sNaN */
-    strcpy(c, "NaN");		   /* complete word */
+    memcpy(c, "NaN", 4);  /* complete word */
     c+=3;			   /* step past */
     if (sourlo==0 && sourml==0 && sourmh==0
      && (sourhi&0x0003ffff)==0) return string; /* zero payload */
@@ -382,7 +382,7 @@ char * decimal128ToString(const decimal128 *d128, char *string){
 
   /* non-0 exponent */
   e=0;				   /* assume no E */
-  pre=c-cstart+exp;
+  pre=(int32_t)(c-cstart)+exp;
   /* [here, pre-exp is the digits count (==1 for zero)] */
   if (exp>0 || pre<-5) {	   /* need exponential form */
     e=pre-1;			   /* calculate E value */

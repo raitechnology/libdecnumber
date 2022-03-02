@@ -112,7 +112,7 @@ _bid_to_dpd32 (_Decimal32 *pres, _Decimal32 *px) {
   b2 = coefficient_x - 1000 * b01;
   b0 = b01 / 1000;
   b1 = b01 - 1000 * b0;
-  dcoeff = b2d[b2] | b2d2[b1];
+  dcoeff = (unsigned int) ( b2d[b2] | b2d2[b1] );
   if (b0 >= 8) { /* is b0 8 or 9? */
     res = sign | ((0x600 | ((exp >> 6) << 7) |
         ((b0 & 1) << 6) | (exp & 0x3f)) << 20) | dcoeff;
@@ -141,14 +141,14 @@ _dpd_to_bid32 (_Decimal32 *pres, _Decimal32 *px) {
   }
   /* normal number */
   if ((x & 0x60000000) == 0x60000000) { /* G0..G1 = 11 -> d0 = 8 + G4 */
-    d0 = d2b3[((x >> 26) & 1) | 8]; /* d0 = (comb & 0x0100 ? 9 : 8); */
+    d0 = (unsigned int) ( d2b3[((x >> 26) & 1) | 8] ); /* d0 = (comb & 0x0100 ? 9 : 8); */
     exp = (x >> 27) & 3; /* exp leading bits are G2..G3 */
   } else {
-    d0 = d2b3[(x >> 26) & 0x7];
+    d0 = (unsigned int) ( d2b3[(x >> 26) & 0x7] );
     exp = (x >> 29) & 3; /* exp loading bits are G0..G1 */
   }
-  d1 = d2b2[(trailing >> 10) & 0x3ff];
-  d2 = d2b[(trailing) & 0x3ff];
+  d1 = (unsigned int) ( d2b2[(trailing >> 10) & 0x3ff] );
+  d2 = (unsigned int) ( d2b[(trailing) & 0x3ff] );
   bcoeff = d2 + d1 + d0;
   exp = (exp << 6) + ((x >> 20) & 0x3f);
   if (bcoeff < (1 << 23)) {
@@ -197,7 +197,7 @@ _bid_to_dpd64 (_Decimal64 *pres, _Decimal64 *px) {
   /* Multiply the binary coefficient by ceil(2^64 / 1000), and take the upper
      64-bits in order to compute a division by 1000. */
   yhi = (D61 * (UINT64)(bcoeff >> (UINT64)27)) >> (UINT64)34;
-  ylo = bcoeff - 1000000000ull * yhi;
+  ylo = (unsigned int) ( bcoeff - 1000000000ull * yhi );
   if (ylo >= 1000000000) {
     ylo = ylo - 1000000000;
     yhi = yhi + 1;
@@ -252,9 +252,9 @@ _dpd_to_bid64 (_Decimal64 *pres, _Decimal64 *px) {
   }
   d1 = d2b5[(trailing >> 40) & 0x3ff];
   d2 = d2b4[(trailing >> 30) & 0x3ff];
-  d3 = d2b3[(trailing >> 20) & 0x3ff];
-  d4 = d2b2[(trailing >> 10) & 0x3ff];
-  d5 = d2b[(trailing) & 0x3ff];
+  d3 = (unsigned int) ( d2b3[(trailing >> 20) & 0x3ff] );
+  d4 = (unsigned int) ( d2b2[(trailing >> 10) & 0x3ff] );
+  d5 = (unsigned int) ( d2b[(trailing) & 0x3ff] );
   bcoeff = (d5 + d4 + d3) + d2 + d1 + d0;
   exp += (comb & 0xff);
   mask = 1;

@@ -363,7 +363,7 @@ decNumber * decNumberFromUInt32(decNumber *dn, uInt uin) {
     *up=(Unit)(uin%(DECDPUNMAX+1));
     uin=uin/(DECDPUNMAX+1);
     }
-  dn->digits=decGetDigits(dn->lsu, up-dn->lsu);
+  dn->digits=decGetDigits(dn->lsu, (int32_t)(up-dn->lsu));
   return dn;
   } /* decNumberFromUInt32 */
 
@@ -643,7 +643,7 @@ decNumber * decNumberFromString(decNumber *dn, const char chars[],
 
     /* Handle decimal point... */
     if (dotchar!=NULL && dotchar<last)	/* non-trailing '.' found? */
-      exponent-=(last-dotchar); 	/* adjust exponent */
+      exponent-=(int32_t)(last-dotchar); 	/* adjust exponent */
     /* [we can now ignore the .] */
 
     /* OK, the digits string is good.  Assemble in the decNumber, or in */
@@ -665,7 +665,7 @@ decNumber * decNumberFromString(decNumber *dn, const char chars[],
     #if DECDPUN>1
     out=0;			   /* accumulator */
     up=res+D2U(d)-1;		   /* -> msu */
-    cut=d-(up-res)*DECDPUN;	   /* digits in top unit */
+    cut=d-(int32_t)(up-res)*DECDPUN;	   /* digits in top unit */
     for (c=cfirst;; c++) {	   /* along the digits */
       if (*c=='.') continue;	   /* ignore '.' [don't decrement cut] */
       out=X10(out)+(Int)*c-(Int)'0';
@@ -843,7 +843,7 @@ decNumber * decNumberAnd(decNumber *res, const decNumber *lhs,
       } /* both OK */
     } /* each unit */
   /* [here uc-1 is the msu of the result] */
-  res->digits=decGetDigits(res->lsu, uc-res->lsu);
+  res->digits=decGetDigits(res->lsu, (int32_t)(uc-res->lsu));
   res->exponent=0;			/* integer */
   res->bits=0;				/* sign=0 */
   return res;  /* [no status to set] */
@@ -1230,7 +1230,7 @@ decNumber * decNumberInvert(decNumber *res, const decNumber *rhs,
       } /* each digit */
     } /* each unit */
   /* [here uc-1 is the msu of the result] */
-  res->digits=decGetDigits(res->lsu, uc-res->lsu);
+  res->digits=decGetDigits(res->lsu, (int32_t)(uc-res->lsu));
   res->exponent=0;			/* integer */
   res->bits=0;				/* sign=0 */
   return res;  /* [no status to set] */
@@ -1850,7 +1850,7 @@ decNumber * decNumberOr(decNumber *res, const decNumber *lhs,
       } /* non-zero */
     } /* each unit */
   /* [here uc-1 is the msu of the result] */
-  res->digits=decGetDigits(res->lsu, uc-res->lsu);
+  res->digits=decGetDigits(res->lsu, (int32_t)(uc-res->lsu));
   res->exponent=0;			/* integer */
   res->bits=0;				/* sign=0 */
   return res;  /* [no status to set] */
@@ -2188,8 +2188,8 @@ decNumber * decNumberPower(decNumber *res, const decNumber *lhs,
 	    }
 	  /* [inv now points to big-enough buffer or allocated storage] */
 	  decNumberCopy(inv, dac);	/* copy the 1/lhs */
-          if (dnOne.digits > 1)
-            __builtin_unreachable ();
+    /*    if (dnOne.digits > 1)
+            __builtin_unreachable ();*/
 	  decNumberCopy(dac, &dnOne);	/* restore acc=1 */
 	  lhs=inv;			/* .. and go forward with new lhs */
 	#if DECSUBSET
@@ -2558,7 +2558,7 @@ decNumber * decNumberRotate(decNumber *res, const decNumber *lhs,
 	  } /* whole units to rotate */
 	/* the rotation may have left an undetermined number of zeros */
 	/* on the left, so true length needs to be calculated */
-	res->digits=decGetDigits(res->lsu, msumax-res->lsu+1);
+	res->digits=decGetDigits(res->lsu, (int32_t)(msumax-res->lsu)+1);
 	} /* rotate needed */
       } /* rhs OK */
     } /* numerics */
@@ -3275,7 +3275,7 @@ decNumber * decNumberXor(decNumber *res, const decNumber *lhs,
       } /* non-zero */
     } /* each unit */
   /* [here uc-1 is the msu of the result] */
-  res->digits=decGetDigits(res->lsu, uc-res->lsu);
+  res->digits=decGetDigits(res->lsu, (int32_t)(uc-res->lsu));
   res->exponent=0;			/* integer */
   res->bits=0;				/* sign=0 */
   return res;  /* [no status to set] */
@@ -3635,15 +3635,15 @@ static void decToString(const decNumber *dn, char *string, Flag eng) {
     }
   if (dn->bits&DECSPECIAL) {	   /* Is a special value */
     if (decNumberIsInfinite(dn)) {
-      strcpy(c,   "Inf");
-      strcpy(c+3, "inity");
+      memcpy(c,   "Inf", 3);
+      memcpy(c+3, "inity", 6);
       return;}
     /* a NaN */
     if (dn->bits&DECSNAN) {	   /* signalling NaN */
       *c='s';
       c++;
       }
-    strcpy(c, "NaN");
+    memcpy(c, "NaN", 4);
     c+=3;			   /* step past */
     /* if not a clean non-zero coefficient, that's all there is in a */
     /* NaN string */
@@ -5060,7 +5060,7 @@ static decNumber * decMultiplyOp(decNumber *res, const decNumber *lhs,
 	  } /* p */
 	*up=(Unit)item; up++;		     /* [final needs no division] */
 	} /* lp */
-      accunits=up-acc;			     /* count of units */
+      accunits=(int32_t)(up-acc);			     /* count of units */
       }
      else { /* here to use units directly, without chunking ['old code'] */
     #endif
@@ -6539,11 +6539,11 @@ static Int decUnitAddSub(const Unit *a, Int alength,
 
   /* OK, all A and B processed; might still have carry or borrow */
   /* return number of Units in the result, negated if a borrow */
-  if (carry==0) return c-clsu;	   /* no carry, so no more to do */
+  if (carry==0) return (Int)(c-clsu);	   /* no carry, so no more to do */
   if (carry>0) {		   /* positive carry */
     *c=(Unit)carry;		   /* place as new unit */
     c++;			   /* .. */
-    return c-clsu;
+    return (Int)(c-clsu);
     }
   /* -ve carry: it's a borrow; complement needed */
   add=1;			   /* temporary carry... */
@@ -6566,7 +6566,7 @@ static Int decUnitAddSub(const Unit *a, Int alength,
     *c=(Unit)(add-carry-1);
     c++;		      /* interesting, include it */
     }
-  return clsu-c;	      /* -ve result indicates borrowed */
+  return (Int)(clsu-c);	      /* -ve result indicates borrowed */
   } /* decUnitAddSub */
 
 /* ------------------------------------------------------------------ */
@@ -6750,7 +6750,7 @@ static Int decShiftToLeast(Unit *uar, Int units, Int shift) {
   if (cut==DECDPUN) {		   /* unit-boundary case; easy */
     up=uar+D2U(shift);
     for (; up<uar+units; target++, up++) *target=*up;
-    return target-uar;
+    return (Int)(target-uar);
     }
 
   /* messier */
@@ -6778,7 +6778,7 @@ static Int decShiftToLeast(Unit *uar, Int units, Int shift) {
     count-=cut;
     if (count<=0) break;
     }
-  return target-uar+1;
+  return (Int)(target-uar)+1;
   } /* decShiftToLeast */
 
 #if DECSUBSET
@@ -7641,7 +7641,7 @@ static decNumber *decDecap(decNumber *dn, Int drop) {
   cut=MSUDIGITS(dn->digits-drop);	/* digits to be in use in msu */
   if (cut!=DECDPUN) *msu%=powers[cut];	/* clear left digits */
   /* that may have left leading zero digits, so do a proper count... */
-  dn->digits=decGetDigits(dn->lsu, msu-dn->lsu+1);
+  dn->digits=decGetDigits(dn->lsu, (int32_t)(msu-dn->lsu)+1);
   return dn;
   } /* decDecap */
 
