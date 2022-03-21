@@ -84,13 +84,13 @@ all_depends += $(libdecnumber_deps)
 all_dirs    += $(bind) $(libd) $(objd) $(dependd)
 all_libs    += $(libd)/libdecnumber.a $(libd)/libdecnumber.$(dll)
 
-all: $(all_libs)
+all: $(all_libs) cmake
 
 .PHONY: cmake
 cmake: CMakeLists.txt
 
 .ONESHELL: CMakeLists.txt
-CMakeLists.txt:
+CMakeLists.txt: .copr/Makefile
 	@cat <<'EOF' > $@
 	cmake_minimum_required (VERSION 3.9.0)
 	project (libdecnumber)
