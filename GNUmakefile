@@ -95,7 +95,6 @@ CMakeLists.txt: .copr/Makefile
 	cmake_minimum_required (VERSION 3.9.0)
 	project (libdecnumber)
 	include_directories (src include)
-	set (CMAKE_VERBOSE_MAKEFILE ON)
 	if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 	  if ($$<CONFIG:Release>)
 	    add_compile_options (/arch:AVX2 /GL)
