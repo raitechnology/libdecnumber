@@ -24,7 +24,7 @@ endif
 CC          ?= gcc
 cc          := $(CC)
 arch_cflags := -fno-omit-frame-pointer
-gcc_wflags  := -Wall -Werror -Wno-stringop-overread
+gcc_wflags  := -Wall -Werror -Wno-stringop-overread -Wno-maybe-uninitialized
 fpicflags   := -fPIC
 soflag      := -shared
 
