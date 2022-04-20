@@ -948,6 +948,7 @@ decNumber * decNumberCompareTotalMag(decNumber *res, const decNumber *lhs,
 	  status|=DEC_Insufficient_storage;
 	  break;}
 	a=allocbufa;			/* use the allocated space */
+        a->bits=0;
 	}
       decNumberCopy(a, lhs);		/* copy content */
       a->bits&=~DECNEG; 		/* .. and clear the sign */
@@ -962,6 +963,7 @@ decNumber * decNumberCompareTotalMag(decNumber *res, const decNumber *lhs,
 	  status|=DEC_Insufficient_storage;
 	  break;}
 	b=allocbufb;			/* use the allocated space */
+        b->bits=0;
 	}
       decNumberCopy(b, rhs);		/* copy content */
       b->bits&=~DECNEG; 		/* .. and clear the sign */
