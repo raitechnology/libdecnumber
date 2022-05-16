@@ -17,8 +17,13 @@ objd      := $(build_dir)/obj
 dependd   := $(build_dir)/dep
 
 # use 'make port_extra=-g' for debug build
+default_cflags := -ggdb -O3
+# use 'make port_extra=-g' for debug build
 ifeq (-g,$(findstring -g,$(port_extra)))
-  DEBUG = true
+  default_cflags := -ggdb
+endif
+ifeq (-a,$(findstring -a,$(port_extra)))
+  default_cflags := -fsanitize=address -ggdb -O3
 endif
 
 CC          ?= gcc
@@ -34,11 +39,6 @@ else
 dll         := so
 endif
 
-ifdef DEBUG
-default_cflags := -ggdb
-else
-default_cflags := -O3 -ggdb
-endif
 # rpmbuild uses RPM_OPT_FLAGS
 ifeq ($(RPM_OPT_FLAGS),)
 CFLAGS ?= $(default_cflags)
