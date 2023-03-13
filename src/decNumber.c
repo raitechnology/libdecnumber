@@ -3370,7 +3370,14 @@ decNumber * decNumberCopy(decNumber *dest, const decNumber *src) {
     /* overlap.  However, this explicit loop is faster in short cases. */
     d=dest->lsu+1;			     /* -> first destination */
     smsup=src->lsu+D2U(src->digits);	     /* -> source msu+1 */
+#if __GNUC__ >= 10
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-overflow"
+#endif
     for (s=src->lsu+1; s<smsup; s++, d++) *d=*s;
+#if __GNUC__ >= 10
+#pragma GCC diagnostic pop
+#endif
     }
   return dest;
   } /* decNumberCopy */
