@@ -383,7 +383,7 @@ Int decNumberToInt32(const decNumber *dn, decContext *set) {
   #endif
 
   /* special or too many digits, or bad exponent */
-  if (dn->bits&DECSPECIAL || dn->digits>10 || dn->exponent!=0) ; /* bad */
+  if ((dn->bits&DECSPECIAL) || dn->digits>10 || dn->exponent!=0) ; /* bad */
    else { /* is a finite integer with 10 or fewer digits */
     Int d;			   /* work */
     const Unit *up;		   /* .. */
@@ -400,7 +400,7 @@ Int decNumberToInt32(const decNumber *dn, decContext *set) {
     /* now low has the lsd, hi the remainder */
     if (hi>214748364 || (hi==214748364 && lo>7)) { /* out of range? */
       /* most-negative is a reprieve */
-      if (dn->bits&DECNEG && hi==214748364 && lo==8) return 0x80000000;
+      if ((dn->bits&DECNEG) && hi==214748364 && lo==8) return 0x80000000;
       /* bad -- drop through */
       }
      else { /* in-range always */
@@ -418,8 +418,8 @@ uInt decNumberToUInt32(const decNumber *dn, decContext *set) {
   if (decCheckOperands(DECUNRESU, DECUNUSED, dn, set)) return 0;
   #endif
   /* special or too many digits, or bad exponent, or negative (<0) */
-  if (dn->bits&DECSPECIAL || dn->digits>10 || dn->exponent!=0
-    || (dn->bits&DECNEG && !ISZERO(dn)));		    /* bad */
+  if ((dn->bits&DECSPECIAL) || dn->digits>10 || dn->exponent!=0
+    || ((dn->bits&DECNEG) && !ISZERO(dn)));		    /* bad */
    else { /* is a finite integer with 10 or fewer digits */
     Int d;			   /* work */
     const Unit *up;		   /* .. */
@@ -1481,7 +1481,7 @@ decNumber * decNumberLog10(decNumber *res, const decNumber *rhs,
 
     /* skip the division if the result so far is infinite, NaN, or */
     /* zero, or there was an error; note NaN from sNaN needs copy */
-    if (status&DEC_NaNs && !(status&DEC_sNaN)) break;
+    if ((status&DEC_NaNs) && !(status&DEC_sNaN)) break;
     if (a->bits&DECSPECIAL || ISZERO(a)) {
       decNumberCopy(res, a);		/* [will fit] */
       break;}
@@ -2204,7 +2204,7 @@ decNumber * decNumberPower(decNumber *res, const decNumber *lhs,
       for (i=1;;i++){		   /* for each bit [top bit ignored] */
 	/* abandon if had overflow or terminal underflow */
 	if (status & (DEC_Overflow|DEC_Underflow)) { /* interesting? */
-	  if (status&DEC_Overflow || ISZERO(dac)) break;
+	  if ((status&DEC_Overflow) || ISZERO(dac)) break;
 	  }
 	/* [the following two lines revealed an optimizer bug in a C++ */
 	/* compiler, with symptom: 5**3 -> 25, when n=n+n was used] */
@@ -3362,6 +3362,7 @@ decNumber * decNumberCopy(decNumber *dest, const decNumber *src) {
   dest->bits=src->bits;
   dest->exponent=src->exponent;
   dest->digits=src->digits;
+
   dest->lsu[0]=src->lsu[0];
   if (src->digits>DECDPUN) {		     /* more Units to come */
     const Unit *smsup, *s;		     /* work */
@@ -3370,17 +3371,11 @@ decNumber * decNumberCopy(decNumber *dest, const decNumber *src) {
     /* overlap.  However, this explicit loop is faster in short cases. */
     d=dest->lsu+1;			     /* -> first destination */
     smsup=src->lsu+D2U(src->digits);	     /* -> source msu+1 */
-#if __GNUC__ >= 10
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstringop-overflow"
-#endif
     for (s=src->lsu+1; s<smsup; s++, d++) *d=*s;
-#if __GNUC__ >= 10
-#pragma GCC diagnostic pop
-#endif
     }
   return dest;
   } /* decNumberCopy */
+
 
 /* ------------------------------------------------------------------ */
 /* decNumberCopyAbs -- quiet absolute value operator		      */
@@ -4296,7 +4291,7 @@ static decNumber * decDivideOp(decNumber *res,
       /* one or two infinities */
       if (decNumberIsInfinite(lhs)) {	/* LHS (dividend) is infinite */
 	if (decNumberIsInfinite(rhs) || /* two infinities are invalid .. */
-	    op & (REMAINDER | REMNEAR)) { /* as is remainder of infinity */
+	    (op & (REMAINDER | REMNEAR))) { /* as is remainder of infinity */
 	  *status|=DEC_Invalid_operation;
 	  break;
 	  }
@@ -4390,7 +4385,7 @@ static decNumber * decDivideOp(decNumber *res,
       /* fastpath remainders so long as the lhs has the smaller */
       /* (or equal) exponent */
       if (lhs->exponent<=rhs->exponent) {
-	if (op&REMAINDER || exponent<-1) {
+	if ((op&REMAINDER) || exponent<-1) {
 	  /* It is REMAINDER or safe REMNEAR; result is [finished */
 	  /* clone of] lhs  (r = x - 0*y) */
 	  residue=0;
@@ -5472,7 +5467,7 @@ decNumber * decExpOp(decNumber *res, const decNumber *rhs,
       for (i=1;;i++){		   /* for each bit [top bit ignored] */
 	/* abandon if have had overflow or terminal underflow */
 	if (*status & (DEC_Overflow|DEC_Underflow)) { /* interesting? */
-	  if (*status&DEC_Overflow || ISZERO(t)) break;}
+	  if ((*status&DEC_Overflow) || ISZERO(t)) break;}
 	n=n<<1; 		   /* move next bit to testable position */
 	if (n<0) {		   /* top bit is set */
 	  seenbit=1;		   /* OK, have a significant bit */
@@ -5658,7 +5653,6 @@ decNumber * decLnOp(decNumber *res, const decNumber *rhs,
 	*status|=(DEC_Inexact | DEC_Rounded);
 	break;}
       } /* integer and short */
-
     /* Determine the working precision.  This is normally the */
     /* requested precision + 2, with a minimum of 9.  However, if */
     /* the rhs is 'over-precise' then allow for all its digits to */

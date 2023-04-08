@@ -58,7 +58,7 @@ see the files COPYING3 and COPYING.RUNTIME respectively.  If not, see
   /* that the structure will be immediately followed by extra space,  */
   /* as required.  DECNUMDIGITS is always >0.			      */
   #if !defined(DECNUMDIGITS)
-    #define DECNUMDIGITS 1
+    #define DECNUMDIGITS 64
   #endif
 
   /* The size (integer data type) of each unit is determined by the   */
