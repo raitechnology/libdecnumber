@@ -1,9 +1,10 @@
+# libdecnumber makefile
 lsb_dist     := $(shell if [ -f /etc/os-release ] ; then \
-                  grep '^NAME=' /etc/os-release | sed 's/.*=\"//' | sed 's/[ \"].*//' ; \
+                  grep '^NAME=' /etc/os-release | sed 's/.*=[\"]*//' | sed 's/[ \"].*//' ; \
                   elif [ -x /usr/bin/lsb_release ] ; then \
                   lsb_release -is ; else echo Linux ; fi)
 lsb_dist_ver := $(shell if [ -f /etc/os-release ] ; then \
-		  grep '^VERSION=' /etc/os-release | sed 's/.*=\"//' | sed 's/ .*//' | sed 's/\"//' ; \
+		  grep '^VERSION=' /etc/os-release | sed 's/.*=[\"]*//' | sed 's/[ \"].*//' | sed 's/\"//' ; \
                   elif [ -x /usr/bin/lsb_release ] ; then \
                   lsb_release -rs | sed 's/[.].*//' ; else uname -r | sed 's/[-].*//' ; fi)
 #lsb_dist     := $(shell if [ -x /usr/bin/lsb_release ] ; then lsb_release -is ; else uname -s ; fi)
@@ -33,20 +34,34 @@ endif
 ifeq (-a,$(findstring -a,$(port_extra)))
   default_cflags := -fsanitize=address -ggdb -O3
 endif
-
+ifeq (-mingw,$(findstring -mingw,$(port_extra)))
+  CC    := /usr/bin/x86_64-w64-mingw32-gcc
+  mingw := true
+endif
+# msys2 using ucrt64
+ifeq (MSYS2,$(lsb_dist))
+  mingw := true
+endif
 CC          ?= gcc
 cc          := $(CC)
+clink       := $(CC)
 arch_cflags := -fno-omit-frame-pointer
-gcc_wflags  := -Wall -Werror -Wno-stringop-overread -Wno-maybe-uninitialized
-fpicflags   := -fPIC
-soflag      := -shared
-
-ifeq (Darwin,$(lsb_dist))
-dll         := dylib
+gcc_wflags  := -Wall -Werror -Wno-maybe-uninitialized
+# -Wno-stringop-overread
+# if windows cross compile
+ifeq (true,$(mingw))
+dll       := dll
+soflag    := -shared -Wl,--subsystem,windows
+fpicflags := -fPIC -DDEC_SHARED
 else
-dll         := so
+dll       := so
+soflag    := -shared
+fpicflags := -fPIC
 endif
-
+# make apple shared lib
+ifeq (Darwin,$(lsb_dist))
+dll       := dylib
+endif
 # rpmbuild uses RPM_OPT_FLAGS
 ifeq ($(RPM_OPT_FLAGS),)
 CFLAGS ?= $(default_cflags)
@@ -58,7 +73,7 @@ cflags := $(gcc_wflags) $(CFLAGS) $(arch_cflags)
 INCLUDES ?=
 DEFINES  ?=
 includes := -Isrc -Iinclude $(INCLUDES)
-defines  :=
+defines  := $(DEFINES)
 
 .PHONY: everything
 everything: all
@@ -190,13 +205,15 @@ $(objd)/%.fpic.o: src/bid/%.c
 $(libd)/%.a:
 	ar rc $@ $($(*)_objs)
 
-$(libd)/%.so:
-	$(cc) $(soflag) $(cflags) -o $@.$($(*)_spec) -Wl,-soname=$(@F).$($(*)_ver) $($(*)_dbjs) $($(*)_dlnk) $(cpp_dll_lnk) $(sock_lib) $(math_lib) $(thread_lib) $(malloc_lib) $(dynlink_lib) && \
-	cd $(libd) && ln -f -s $(@F).$($(*)_spec) $(@F).$($(*)_ver) && ln -f -s $(@F).$($(*)_ver) $(@F)
-
+ifeq (Darwin,$(lsb_dist))
 $(libd)/%.dylib:
-	$(cc) -dynamiclib $(cflags) -o $@.$($(*)_dylib).dylib -current_version $($(*)_dylib) -compatibility_version $($(*)_ver) $($(*)_dbjs) $($(*)_dlnk) $(cpp_dll_lnk) $(sock_lib) $(math_lib) $(thread_lib) $(malloc_lib) $(dynlink_lib) && \
+	$(clink) -dynamiclib $(cflags) -o $@.$($(*)_dylib).dylib -current_version $($(*)_dylib) -compatibility_version $($(*)_ver) $($(*)_dbjs) $($(*)_dlnk) $(sock_lib) $(math_lib) $(thread_lib) $(malloc_lib) $(dynlink_lib) && \
 	cd $(libd) && ln -f -s $(@F).$($(*)_dylib).dylib $(@F).$($(*)_ver).dylib && ln -f -s $(@F).$($(*)_ver).dylib $(@F)
+else
+$(libd)/%.$(dll):
+	$(clink) $(soflag) $(rpath) $(cflags) -o $@.$($(*)_spec) -Wl,-soname=$(@F).$($(*)_ver) $($(*)_dbjs) $($(*)_dlnk) $(sock_lib) $(math_lib) $(thread_lib) $(malloc_lib) $(dynlink_lib) && \
+	cd $(libd) && ln -f -s $(@F).$($(*)_spec) $(@F).$($(*)_ver) && ln -f -s $(@F).$($(*)_ver) $(@F)
+endif
 
 $(dependd)/%.d: src/%.c
 	$(cc) $(arch_cflags) $(defines) $(includes) $($(notdir $*)_includes) $($(notdir $*)_defines) -MM $< -MT $(objd)/$(*).o -MF $@
