@@ -9,6 +9,7 @@
 /DEB*
 /SUN*
 /DAR*
+/ROCKY*
 # vim swap files
 .*.sw*
 .sw*
