@@ -50,7 +50,7 @@ CC          ?= gcc
 cc          := $(CC)
 clink       := $(CC)
 arch_cflags := -fno-omit-frame-pointer
-gcc_wflags  := -Wall -Werror -Wno-maybe-uninitialized
+gcc_wflags  := -Wall -Werror -Wno-maybe-uninitialized -Wno-unused-but-set-variable
 # -Wno-stringop-overread
 # if windows cross compile
 ifeq (true,$(mingw))
